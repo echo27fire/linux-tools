@@ -1,0 +1,10 @@
+command notes
+
+
+dd 0f=~/script2/5bmfile if=/dev/zerp bs=1 count=5
+# makes a 5mb file block size 1 count 5
+
+
+date +%m/%d/%y 
+
+

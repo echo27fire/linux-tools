@@ -1,0 +1,42 @@
+#!/bin/bash
+#	Taylor Goodspeed
+#	3 varriables
+#	exe 3+ commands 
+# 	outout to screen and logfile named script2.out
+#	
+#	functions:
+#	create dir named Scrpt2
+#	create file called script2.txt
+#	input the date on the first line of the file
+#	input the uptime of the system on the first file (uptime)
+#	create a file that is 5mb is size named 5mbfile
+#
+#
+#	vars
+fsize=5
+wday=`date`
+tlog=`date -R`
+uname='Taylor Goodspeed'
+
+clear
+echo "script processing"
+
+mkdir ~/script2;cd ~/script2/
+printf "processing script2 $wday" > script2.out 
+
+date;date > script2.txt 
+printf "\ncreated file script2.txt $wday" >> script2.out
+
+echo $uname >> script2.txt
+printf "\nupdated file script2.txt $wday" >> script2.out
+
+
+uptime >> script2.txt
+printf "\nupdated  file script2.txt $wday" >> script2.out
+
+truncate -s 5M ./5mbFile
+printf "\ncreated 5mbfile $wday \n" >> script2.out
+
+echo "processing complete logging"
+echo "$? exit code on $wday" >> script2.out
+
