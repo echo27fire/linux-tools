@@ -9,7 +9,7 @@ USER=$(whoami)
 smbdir=/samba
 IF=/samba/Influx
 TG=/samba/Telegraf
-
+SMBgrp=samba-group
 
 # Functions
 function banner () {
@@ -87,9 +87,9 @@ sudo mkdir $TG $IF || echo "errro at line #87"
 
 
 # setup users and permissions
-read "what name would you like for the samba group?:" GRP
-chgrp $GRP -R $smbdir
-chmod 774 -R  $smbdir
+sudo groupadd $SMBgrp || echo "error adding group"
+sudo chgrp $SMBgrp -R $smbdir
+sudo chmod 774 -R  $smbdir
 sudo systemctl restart smbd nmbd
 
 
