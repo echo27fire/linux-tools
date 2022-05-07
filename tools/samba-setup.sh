@@ -90,7 +90,7 @@ sudo mkdir $TG $IF || echo "errro at line #87"
 read "what name would you like for the samba group?:" GRP
 chgrp $GRP -R $smbdir
 chmod 774 -R  $smbdir
-
+sudo systemctl restart smbd nmbd
 
 
 
