@@ -7,6 +7,9 @@
 # Vars
 USER=$(whoami)
 smbdir=/samba
+IF=/samba/Influx
+TG=/samba/Telegraf
+
 
 # Functions
 function banner () {
@@ -33,7 +36,7 @@ cat << EOF >> /home/$USER/smb.conf
 
 # Set share configuration at the end
 [Influx] \
-   path = $smbdir/influx
+   path = $IF
    writable = yes
    browseable = yes
    valid users = taylor noc
@@ -41,7 +44,7 @@ cat << EOF >> /home/$USER/smb.conf
 
 
 [Telegraf]
-   path = $smbdir/Telegraf
+   path = $TG
    writeable = yes
    browseable = yes
    valid users = taylor noc
@@ -63,14 +66,13 @@ echo "update complete ready to install"
 
 # stage 2  make DIRs and install samba
 echo "making SAMBA directory"
-sudo mkdir -p $smbdir || echo "error with directory creation"
+sudo mkdir -p $smbdir || echo "error at line #69"
 echo "installing samba and samba tools"
 sudo apt install samba cifs-utils || echo "error installing packages"
 echo "samba install complete, making bakup of smb.conf"
 
 # stage 3 - backup inital config & make custom config
 smb-backup # config cp to user home dir.
-sudo chmod 664 -R /$smbdir
 sudo echo ' ' > ~/smb.conf # blanks out existing custom conf file if it exists change to if statement?
 CONF-MAKE
 #sudo cat ~/smb.conf > /etc/samba/smb.conf
@@ -81,6 +83,15 @@ sudo groupadd samba
 sudo usermod -aG samba $USER
 sudo useradd noc && sudo usermod -G samba noc
 sudo passwd -d noc
-mkdir /samba/influx;sudo chown noc:samba -R /samba/influx && sudo chmod 2770 /samba/influx
+sudo mkdir $TG $IF || echo "errro at line #87"
+
+
+# setup users and permissions
+read "what name would you like for the samba group?:" GRP
+chgrp $GRP -R $smbdir
+chmod 774 -R  $smbdir
+
+
+
 
 
