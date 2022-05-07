@@ -25,7 +25,7 @@ function smb-backup () {
 sudo cp /etc/samba/smb.conf{,.backup}
 }
 
-function CONF-MAKE () {
+function smb-global () {
 cat << EOF >> /home/$USER/smb.conf
 [global]
 # Configure correct UTP
@@ -33,7 +33,10 @@ cat << EOF >> /home/$USER/smb.conf
 # Change this to the workgroup/NT-domain name your Samba server will be part of \
    workgroup = WORKGROUP
    bind interfaces only = yes
+EOF
+}
 
+function smb 
 # Set share configuration at the end
 [Influx] \
    path = $IF
