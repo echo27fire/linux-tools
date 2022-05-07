@@ -32,13 +32,21 @@ cat << EOF >> /home/$USER/smb.conf
    bind interfaces only = yes
 
 # Set share configuration at the end
-[Docs] \
-   path = $smbdir
+[Influx] \
+   path = $smbdir/influx
    writable = yes
-   guest ok = yes
-   guest only = yes
-   create mode = 0664
-   directory mode = 0664
+   browseable = yes
+   valid users = taylor noc
+   write list = taylor noc
+
+
+[Telegraf]
+   path = $smbdir/Telegraf
+   writeable = yes
+   browseable = yes
+   valid users = taylor noc
+   write list = taylor
+
 EOF
 }
 
