@@ -1,15 +1,13 @@
 #!/bin/bash
 # Vars
 USER=$(whoami) # the user runninhg the script
-smbdir=/mnt/samba # main path to smb shares
-IFLX=/mnt/samba/Influx # path to influxdb share
-TGRF=/mnt/samba/Telegraf # path to telegraf share
+smbdir=/home/share/ # main path to smb shares
+IFLX=$smbdir/Influx # path to influxdb share
+TGRF=$smbdir/Telegraf # path to telegraf share
 SMBCONF=smb.conf # file name for smb main config file
 SMBSHARE=smb-shares.conf # file name for smb shares config
 SMBNAMES=smb-names.conf
-SMBGRP=sambausr # group for samba users
-EXTRAPATH=/boot/config/
-SMBEXTRA=/smb-extra.conf
+SMBGRP=sambashare # group for samba users
 
 
 
@@ -79,20 +77,18 @@ cat << EOF >> /etc/samba/$SAMBCONF
    guest only = yes
    create mode = 0777
    directory mode = 0777
+
+[noc]
+path = $SMBDIR/noc
+read only = no
+browseable = yes
+force create mode = 0660
+force directory mode = 2770
+valid users = noc root taylor
+
+
 EOF
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #-----------------------------------------------#
@@ -106,5 +102,23 @@ smb-dl
 smb-backup
 smb-makeshare
 smb-conf
+sudo chgrp $SMBGRP $smbdir
+
+
+#add share specific user
+mkdir $smbdir/noc
+sudo useradd -M -d $smbdir/noc -s /user/sbin/nologin -G $SMBGRP noc
+chown noc:$SMBGRP $smbdir
+chmod 2770 /mnt/samba/noc
+
+#configure user login
+sudo smbpasswd -a noc
+sudo smbpasswd -e noc
+
+
+
+
+
+# end of script - restart samba service
 smbstart
 
