@@ -2,11 +2,8 @@
 # Vars
 USER=$(whoami) # the user runninhg the script
 smbdir=/home/share/ # main path to smb shares
-IFLX=$smbdir/Influx # path to influxdb share
-TGRF=$smbdir/Telegraf # path to telegraf share
+TICK=$smbdir/TICK # path to influxdb share
 SMBCONF=smb.conf # file name for smb main config file
-SMBSHARE=smb-shares.conf # file name for smb shares config
-SMBNAMES=smb-names.conf
 SMBGRP=sambashare # group for samba users
 
 
@@ -45,7 +42,7 @@ sudo apt -y install samba
 
 # Make DIRs for shares
 function smb-makeshare (){
-sudo mkdir -p  $IFLX $TGRF
+sudo mkdir -p  $TICK
 }
 
 #-----------------------------------------------#
@@ -62,7 +59,7 @@ sudo systemctl restart smbd nmbd
 
 function smb-conf (){
 
-cat << EOF >> /etc/samba/$SAMBCONF
+cat << EOF >> ~/$USER/$SMBCONF
 # Configure correct UTP
   unix charset = UTF-8
 # Change this to the workgroup/NT-domain name your Samba server will be part of
@@ -70,8 +67,8 @@ cat << EOF >> /etc/samba/$SAMBCONF
    bind interfaces only = yes
 
 # Set share configuration at the end
-[TICK]
-   path = $SMBDIR
+[tick]
+   path = $SMBDIR/TICK
    writable = yes
    guest ok = yes
    guest only = yes
@@ -82,11 +79,9 @@ cat << EOF >> /etc/samba/$SAMBCONF
 path = $SMBDIR/noc
 read only = no
 browseable = yes
-force create mode = 0660
-force directory mode = 2770
-valid users = noc root taylor
-
-
+force create mode = 0777
+force directory mode = 2777
+valid users = noc taylor
 EOF
 }
 
@@ -106,17 +101,18 @@ sudo chgrp $SMBGRP $smbdir
 
 
 #add share specific user
-mkdir $smbdir/noc
+sudo mkdir $smbdir/noc
 sudo useradd -M -d $smbdir/noc -s /user/sbin/nologin -G $SMBGRP noc
-chown noc:$SMBGRP $smbdir
-chmod 2770 /mnt/samba/noc
+sudo chown noc:$SMBGRP $smbdir
+sudo chmod 2777 /mnt/samba/noc
 
 #configure user login
 sudo smbpasswd -a noc
 sudo smbpasswd -e noc
 
-
-
+#configure user loging -taylor
+sudo smbpasswd -a taylor
+sudo smbpasswd -e taylor
 
 
 # end of script - restart samba service
