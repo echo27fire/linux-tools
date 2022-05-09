@@ -6,9 +6,6 @@ TICK=$smbdir/TICK # path to influxdb share
 SMBCONF=smb.conf # file name for smb main config file
 SMBGRP=sambashare # group for samba users
 
-
-
-
 # Functions
 # just makes a banner
 function banner () {
@@ -26,7 +23,7 @@ function smb-backup () {
 sudo cp /etc/samba/smb.conf{,.backup}
 }
 
-# Blanks ane existing files
+# Blanks any existing files
 function smb-blank () {
   #blanks out config files
   sudo echo ' ' > ~/$SMBCONF # blanks out existing custom conf file if it exists change to if statement?
@@ -67,29 +64,14 @@ cat << EOF >> ~/$USER/$SMBCONF
    bind interfaces only = yes
 
 # Set share configuration at the end
-[tick]
-   path = $SMBDIR/TICK
-   writable = yes
-   guest ok = yes
-   guest only = yes
-   create mode = 0777
-   directory mode = 0777
-
 [noc]
 path = $SMBDIR/noc
 read only = no
 browseable = yes
 force create mode = 0777
 force directory mode = 0777
-valid users = noc taylor
+valid users = noc
 
-[taylor]
-path = /home/taylor/samba
-read only = no
-browseable = yes
-force create mode = 0777
-force directory mode = 0777
-valid users = taylor
 
 EOF
 }
@@ -109,7 +91,7 @@ smb-conf
 sudo chgrp $SMBGRP $smbdir
 
 
-#add share specific user
+#Phase 2 - mkdirs and setup ownership / permissions
 sudo mkdir -p $smbdir/noc $smbdir/noc/win $smbdir/noc/linux $smbdir/noc/vcsa
 sudo useradd -M -d $smbdir/noc -s /user/sbin/nologin -G $SMBGRP noc
 sudo chown -R noc:$SMBGRP $smbdir
