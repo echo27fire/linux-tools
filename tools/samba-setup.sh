@@ -3,6 +3,7 @@
 USER=$(whoami) # the user runninhg the script
 smbdir=/home/share/ # main path to smb shares
 TICK=$smbdir/TICK # path to influxdb share
+NOC=$smbdir/noc
 SMBCONF=smb.conf # file name for smb main config file
 SMBGRP=sambashare # group for samba users
 
@@ -39,7 +40,7 @@ sudo apt -y install samba
 
 # Make DIRs for shares
 function smb-makeshare (){
-sudo mkdir -p  $TICK
+sudo mkdir -p  $TICK $NOC
 }
 
 #-----------------------------------------------#
@@ -92,10 +93,10 @@ sudo chgrp $SMBGRP $smbdir
 
 
 #Phase 2 - mkdirs and setup ownership / permissions
-sudo mkdir -p $smbdir/noc $smbdir/noc/win $smbdir/noc/linux $smbdir/noc/vcsa
-sudo useradd -M -d $smbdir/noc -s /user/sbin/nologin -G $SMBGRP noc
+sudo mkdir -p $NOC/telegraf $NOC/influx
+sudo useradd -M -d $NOC -s /user/sbin/nologin -G $SMBGRP noc
 sudo chown -R noc:$SMBGRP $smbdir
-sudo chmod 2777 /mnt/samba/noc
+sudo chmod 2777 $smbddir
 
 #configure user login
 sudo smbpasswd -a noc
