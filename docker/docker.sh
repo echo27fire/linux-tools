@@ -22,5 +22,7 @@ groups
 }
 
 # pull up docker status
+docker-install
+user-mod
 sudo systemctl status docker
 
