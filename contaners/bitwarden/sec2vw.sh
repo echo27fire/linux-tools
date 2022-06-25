@@ -6,9 +6,8 @@ echo $KEY
 docker run -d --name vaultwarden \
 --restart=always \
 -v /docker/appdata/vaultwarden:/data/ \
--p  81:80 -e WEBSOCKET_ENABLED=true -p 3012:3012 \
+-p  85:443 \
 -e ADMIN_TOKEN="$KEY" \
 -e SIGNUPS_ALLOWED=false \
 vaultwarden/server:latest
-
-docker ps -a | grep vaultwarden
+echo 'run complete'
