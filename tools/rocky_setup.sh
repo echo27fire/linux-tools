@@ -10,14 +10,14 @@ dnf install elrepo-release -y
 dnf install rpmfusion-free-release -y
 dnf update -y
 dnf makecache
-
 echo 'repo and update process complete'
 
+# install cockpit
 dnf install cockpit -y
 systemctl enable --now cockpit.socket
-
 echo 'cockpit configured'
 
+# disable firewalld and install ufw
 systemctl disable --now firewalld.service
 dnf install ufw -y
 systemctl enable --now ufw.service
@@ -31,7 +31,6 @@ ufw enable
 echo 'ufw enabbled'
 
 # install checkmk
-
 cd /tmp 
 mkdir ./$DIR
 cd $DIR
