@@ -27,7 +27,6 @@ ufw allow https
 ufw allow ssh
 ufw allow 9090
 ufw enable
-
 echo 'ufw enabbled'
 
 # install checkmk
