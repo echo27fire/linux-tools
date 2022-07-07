@@ -12,7 +12,7 @@ docker run -d \
  -e TZ=America/New_York \
  -p 8081:80 \
  -p 8082:443 \
- -v /docker/appdata/heimdall:/config \
+ -v /appdata/heimdall:/config \
  --restart unless-stopped \
  lscr.io/linuxserver/heimdall:latest
 
